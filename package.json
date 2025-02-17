@@ -1,0 +1,22 @@
+{
+  "name": "saturn-bot",
+  "version": "0.1.0",
+  "description": "A bot made for the Saturn Operators Discord server.",
+  "main": "src/main.js",
+  "scripts": {
+    "run": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pyrolyzed/saturn-bot.git"
+  },
+  "author": "Pyrolyzed",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pyrolyzed/saturn-bot/issues"
+  },
+  "homepage": "https://github.com/Pyrolyzed/saturn-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.18.0"
+  }
+}
