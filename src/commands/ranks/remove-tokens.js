@@ -19,7 +19,7 @@ module.exports = {
 	const amount = interaction.options.getString("amount");
 	const target = interaction.options.getUser("target");
 	const user = interaction.user;
-	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageUsers)) {
+	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
 		await interaction.reply("You don't have the correct permissions for that!");
 		return;
 	}
