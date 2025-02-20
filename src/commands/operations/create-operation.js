@@ -54,6 +54,6 @@ module.exports = {
 	operationMessage.react("❓");
 	operationMessage.react("❌");
 	
-	await interaction.reply(`${interaction.user.tag} created operation ${name} for ${time}`);
+	await interaction.reply(`<@${interaction.user.id}> created operation ${name} for ${time}`);
     },
 };
