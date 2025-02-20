@@ -1,9 +1,7 @@
 const channelsFile = require("../data/channels.json");
 const fs = require("fs");
 
-const getOperationChannel = () => {
-    return channelsFile["OPERATIONS"];
-};
+const getOperationChannel = () => channelsFile["OPERATIONS"];
 
 const setOperationChannel = (channel) => {
     channelsFile["OPERATIONS"] = channel.id

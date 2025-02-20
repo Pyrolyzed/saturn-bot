@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { hasModPerms } = require("../../utils.js");
 const { getOperationChannel } = require("../../channels.js");
+const { pingOperator } = require("../../roles.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -35,6 +36,7 @@ module.exports = {
 		{ name: "\u200B", value: "\u200B" }, // new line
 		{ name: "At:", value: time },
 	    )
+	    .setFooter({ text: pingOperator() })
 	    .setTimestamp()
 
 	getOperationChannel().send({ embeds: [ operationEmbed ] });
