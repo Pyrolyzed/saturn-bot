@@ -5,7 +5,7 @@ const getOperationChannel = () => channelsFile["OPERATIONS"];
 
 const setOperationChannel = (channel) => {
     channelsFile["OPERATIONS"] = channel.id
-    fs.writeFileSync("data/channels.json", JSON.stringify(channelsFile, null, 2), "utf8", err => { if (err) throw err; });
+    fs.writeFileSync("data/data.json", JSON.stringify(channelsFile, null, 2), "utf8", err => { if (err) throw err; });
 };
 
 exports.setOperationChannel = setOperationChannel;

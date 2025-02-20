@@ -5,7 +5,7 @@ const pingOperator = () => `<@&${getOperatorRole}>`;
 
 const setOperatorRole = (role) => {
     rolesFile["OPERATOR"] = role.id;
-    fs.writeFileSync("data/roles.json", JSON.stringify(rolesFile, null, 2), "utf8", err => { if (err) throw err; });
+    fs.writeFileSync("data/data.json", JSON.stringify(rolesFile, null, 2), "utf8", err => { if (err) throw err; });
 };
 
 const getOperatorRole = () => rolesFile["OPERATOR"];

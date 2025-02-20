@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { hasModPerms } = require("../../utils.js");
 const { getOperationChannel } = require("../../channels.js");
-const { pingOperator } = require("../../roles.js");
+const { pingOperator, getOperatorRole } = require("../../roles.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -24,10 +24,17 @@ module.exports = {
 	const description = interaction.options.getString("description");
 	const time = interaction.options.getString("time");
 	if (!hasModPerms(interaction.member)) {
-		await interaction.reply("You don't have the correct permissions for that!");
-		return;
+	    await interaction.reply("You don't have the correct permissions for that!");
+	    return;
 	}
-
+	if (!getOperationChannel()) {
+	    await interaction.reply(`You need to set the operations channel first!`);
+	    return;
+	}
+	if (!getOperatorRole()) {
+	    await interaction.reply(`You need to set the operator role first!`);
+	    return;
+	}
 	const operationEmbed = new EmbedBuilder()
 	    .setColor(0x0099FF)
 	    .setTitle(`Operation ${name}`)
