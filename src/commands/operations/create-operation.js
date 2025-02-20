@@ -8,16 +8,16 @@ module.exports = {
 	.setDescription("Create an operation")
         .addStringOption(option =>
 	    option
-		.setname("name")
-	        .setdescription("The name of the operation"))
+		.setName("name")
+	        .setDescription("The name of the operation"))
         .addStringOption(option =>
 	    option
-		.setname("description")
-	        .setdescription("The description of the operation"))
+		.setName("description")
+	        .setDescription("The description of the operation"))
         .addStringOption(option =>
 	    option
-		.setname("time")
-	        .setdescription("The time of the operation")), 
+		.setName("time")
+	        .setDescription("The time of the operation")), 
     async execute(interaction) {
 	const name = interaction.options.getString("name");
 	const description = interaction.options.getString("description");
