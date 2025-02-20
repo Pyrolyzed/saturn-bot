@@ -1,4 +1,4 @@
-const tokensFile = require("../data/tokens.json");
+const tokensFile = require("../data/data.json");
 const fs = require("fs");
 
 const getUserTokens = (member) => {

@@ -1,4 +1,4 @@
-const rolesFile = require("../data/roles.json");
+const rolesFile = require("../data/data.json");
 const fs = require("fs");
 
 const pingOperator = () => `<@&${getOperatorRole}>`;

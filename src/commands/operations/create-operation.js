@@ -35,12 +35,17 @@ module.exports = {
 		{ name: "Briefing", value: description },
 		{ name: "\u200B", value: "\u200B" }, // new line
 		{ name: "At:", value: time },
+		{ name: "\u200B", value: "\u200B" }, // new line
+		{ name: "Attendance", value: "React with a checkmark if you can attend, a question mark if you might be able to attend, or an X if you can't attend." },
 	    )
 	    .setFooter({ text: pingOperator() })
 	    .setTimestamp()
 
-	getOperationChannel().send({ embeds: [ operationEmbed ] });
-
+	const operationMessage = getOperationChannel().send({ embeds: [ operationEmbed ] });
+	operationMessage.react(":white_check_mark:");
+	operationMessage.react(":question:"
+	operationMessage.react(":x:");
+	
 	await interaction.reply(`${interaction.user.tag} created operation ${name} for ${time}`);
     },
 };
