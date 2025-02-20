@@ -1,7 +1,7 @@
 const rolesFile = require("../data/data.json");
 const fs = require("fs");
 
-const pingOperator = () => `<@&${getOperatorRole}>`;
+const pingOperator = () => `<@&${getOperatorRole()}>`;
 
 const setOperatorRole = (role) => {
     rolesFile["OPERATOR"] = role.id;

@@ -23,6 +23,8 @@ module.exports = {
 	const name = interaction.options.getString("name");
 	const description = interaction.options.getString("description");
 	const time = interaction.options.getString("time");
+	if (!(name && description && time))
+	    return;
 	if (!hasModPerms(interaction.member)) {
 	    await interaction.reply("You don't have the correct permissions for that!");
 	    return;
@@ -35,23 +37,22 @@ module.exports = {
 	    await interaction.reply(`You need to set the operator role first!`);
 	    return;
 	}
+	const channel = await interaction.client.channels.fetch(getOperationChannel());
+	channel.send(pingOperator());
 	const operationEmbed = new EmbedBuilder()
 	    .setColor(0x0099FF)
 	    .setTitle(`Operation ${name}`)
 	    .addFields(
 		{ name: "Briefing", value: description },
-		{ name: "\u200B", value: "\u200B" }, // new line
-		{ name: "At:", value: time },
-		{ name: "\u200B", value: "\u200B" }, // new line
+		{ name: "At:", value: time, inline: true },
 		{ name: "Attendance", value: "React with a checkmark if you can attend, a question mark if you might be able to attend, or an X if you can't attend." },
 	    )
-	    .setFooter({ text: pingOperator() })
 	    .setTimestamp()
 
-	const operationMessage = getOperationChannel().send({ embeds: [ operationEmbed ] });
-	operationMessage.react(":white_check_mark:");
-	operationMessage.react(":question:");
-	operationMessage.react(":x:");
+	const operationMessage = await channel.send({ embeds: [ operationEmbed ] });
+	operationMessage.react("✅");
+	operationMessage.react("❓");
+	operationMessage.react("❌");
 	
 	await interaction.reply(`${interaction.user.tag} created operation ${name} for ${time}`);
     },
