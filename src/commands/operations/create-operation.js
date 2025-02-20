@@ -43,7 +43,7 @@ module.exports = {
 
 	const operationMessage = getOperationChannel().send({ embeds: [ operationEmbed ] });
 	operationMessage.react(":white_check_mark:");
-	operationMessage.react(":question:"
+	operationMessage.react(":question:");
 	operationMessage.react(":x:");
 	
 	await interaction.reply(`${interaction.user.tag} created operation ${name} for ${time}`);
