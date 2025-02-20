@@ -3,16 +3,16 @@ const fs = require("fs");
 
 const getUserTokens = (member) => {
     const memberUsername = member.username;
-    if (!tokensFile[memberUsername]) {
+    if (!tokensFile["TOKENS"][memberUsername]) {
 	setUserTokens(member, 0);
 	return 0;
     }
 
-    return Number(tokensFile[memberUsername]);
+    return Number(tokensFile["TOKENS"][memberUsername]);
 };
 
 const setUserTokens = (member, tokens) => {
-    tokensFile[member.username] = Number(tokens);
+    tokensFile["TOKENS"][member.username] = Number(tokens);
     fs.writeFileSync("data/tokens.json", JSON.stringify(tokensFile, null, 2), "utf8", err => { if (err) throw err; });
 };
 
