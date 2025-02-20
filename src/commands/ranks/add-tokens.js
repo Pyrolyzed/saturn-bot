@@ -1,5 +1,6 @@
-const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 const { addUserTokens, getUserTokens } = require("../../tokens.js");
+const { hasModPerms } = require("../../utils.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,7 +20,7 @@ module.exports = {
 	const amount = interaction.options.getString("amount");
 	const target = interaction.options.getUser("target");
 	const user = interaction.user;
-	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
+	if (!hasModPerms(interaction.member)) {
 		await interaction.reply("You don't have the correct permissions for that!");
 		return;
 	}
