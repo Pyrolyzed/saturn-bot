@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, GuildScheduledEventEntityType } = require("discord.js");
 const { hasModPerms, getDate } = require("../../utils.js");
-const { getOperationChannel } = require("../../channels.js");
-const { pingOperator, getOperatorRole } = require("../../roles.js");
+const { getChannel } = require("../../channels.js");
+const { pingRole, getRoleId } = require("../../roles.js");
 
 const setupEmojiReaction = async (emoji, message, fieldName) => {
     const embed = message.embeds[0];
@@ -44,22 +44,24 @@ module.exports = {
 	const name = interaction.options.getString("name");
 	const description = interaction.options.getString("description");
 	const time = interaction.options.getString("time");
-	if (!(name && description && time))
+	if (!(name && description && time)) {
+	    await interaction.reply("You must specify all 3 arguments!");
 	    return;
+	}
 	if (!hasModPerms(interaction.member)) {
 	    await interaction.reply("You don't have the correct permissions for that!");
 	    return;
 	}
-	if (!getOperationChannel()) {
+	if (!getChannel("OPERATIONS")) {
 	    await interaction.reply(`You need to set the operations channel first!`);
 	    return;
 	}
-	if (!getOperatorRole()) {
+	if (!getRoleId("OPERATOR")) {
 	    await interaction.reply(`You need to set the operator role first!`);
 	    return;
 	}
-	const channel = await interaction.client.channels.fetch(getOperationChannel());
-	channel.send(pingOperator());
+	const channel = await interaction.client.channels.fetch(getChannel("OPERATIONS"));
+	channel.send(pingRole("OPERATOR"));
 	const operationEmbed = new EmbedBuilder()
 	    .setColor(0x0099FF)
 	    .setTitle(`Operation ${name}`)

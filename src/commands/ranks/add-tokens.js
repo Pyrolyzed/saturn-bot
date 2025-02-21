@@ -19,12 +19,14 @@ module.exports = {
     async execute(interaction) {
 	const amount = interaction.options.getString("amount");
 	const target = interaction.options.getUser("target");
-	if (!(amount && target))
+	if (!(amount > 0)) {
+	    await interaction.reply("You must specify an amount!");
 	    return;
+	}
 	const user = interaction.user;
 	if (!hasModPerms(interaction.member)) {
-		await interaction.reply("You don't have the correct permissions for that!");
-		return;
+	    await interaction.reply("You don't have the correct permissions for that!");
+	    return;
 	}
 	if (!target) { 
 	    addUserTokens(user, amount);

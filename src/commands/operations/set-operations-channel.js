@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, ChannelType } = require("discord.js");
 const { hasModPerms } = require("../../utils.js");
-const { setOperationChannel } = require("../../channels.js");
+const { setChannel } = require("../../channels.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,7 +21,7 @@ module.exports = {
 		return;
 	}
 	
-	setOperationChannel(channel);
+	setChannel(channel, "OPERATIONS");
 	
 	await interaction.reply(`Set ${channel.name} to operations channel.`);
     },

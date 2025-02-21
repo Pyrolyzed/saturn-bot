@@ -1,6 +1,8 @@
 const tokensFile = require("../data/data.json");
 const fs = require("fs");
 
+const writeTokensFile = () => { fs.writeFileSync("data/data.json", JSON.stringify(tokensFile, null, 2), "utf8", err => { if (err) throw err; }); };
+
 const getUserTokens = (member) => {
     const memberUsername = member.username;
     if (!tokensFile.TOKENS) {
@@ -17,12 +19,12 @@ const getUserTokens = (member) => {
 
 const createTokensFile = () => {
     tokensFile.TOKENS = {};
-    fs.writeFileSync("data/data.json", JSON.stringify(tokensFile, null, 2), "utf8", err => { if (err) throw err; });
+    fs.writeFileSync("data/data.json", JSON.stringify(tokensFile, null, 2), "utf8", err => { if (err) throw err; }); 
 };
 
 const setUserTokens = (member, tokens) => {
     tokensFile.TOKENS[member.username] = Number(tokens);
-    fs.writeFileSync("data/data.json", JSON.stringify(tokensFile, null, 2), "utf8", err => { if (err) throw err; });
+    fs.writeFileSync("data/data.json", JSON.stringify(tokensFile, null, 2), "utf8", err => { if (err) throw err; }); 
 };
 
 const addUserTokens = (member, amount) => {
@@ -32,4 +34,3 @@ const addUserTokens = (member, amount) => {
 exports.getUserTokens = getUserTokens;
 exports.setUserTokens = setUserTokens;
 exports.addUserTokens = addUserTokens;
-

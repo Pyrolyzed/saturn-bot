@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { hasModPerms } = require("../../utils.js");
-const { setOperatorRole } = require("../../roles.js");
+const { setRole } = require("../../roles.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,12 +15,13 @@ module.exports = {
 	const role = interaction.options.getRole("role");
 	if (!role)
 	    return;
+
 	if (!hasModPerms(interaction.member)) {
-		await interaction.reply("You don't have the correct permissions for that!");
-		return;
+	    await interaction.reply("You don't have the correct permissions for that!");
+	    return;
 	}
 
-	setOperatorRole(role);
+	setRole(role, "OPERATOR");
 	
 	await interaction.reply(`Set ${role.name} to operator role.`);
     },
