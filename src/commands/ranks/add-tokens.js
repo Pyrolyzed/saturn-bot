@@ -19,6 +19,8 @@ module.exports = {
     async execute(interaction) {
 	const amount = interaction.options.getString("amount");
 	const target = interaction.options.getUser("target");
+	if (!(amount && target))
+	    return;
 	const user = interaction.user;
 	if (!hasModPerms(interaction.member)) {
 		await interaction.reply("You don't have the correct permissions for that!");

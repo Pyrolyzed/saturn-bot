@@ -14,6 +14,8 @@ module.exports = {
 		    .setRequired(true)),
     async execute(interaction) {
 	const channel = interaction.options.getChannel("channel");
+	if (!channel)
+	    return;
 	if (!hasModPerms(interaction.member)) {
 		await interaction.reply("You don't have the correct permissions for that!");
 		return;
