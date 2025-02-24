@@ -4,36 +4,63 @@ const { getChannel } = require("../../channels.js");
 const { pingRole, getRoleId } = require("../../roles.js");
 const chrono = require("chrono-node");
 
+// TODO: Move these to an embed utils file
+
+function findFieldByContents(contents, embed) {
+    return embed.find(field => field.value.includes(contents));
+}
+
+function findField(findField, embed) {
+    return embed.find(field => field == findField);
+}
+
+function findFieldByName(name, embed) {
+    return embed.find(field => field.name == name);
+}
+
+function editField(value, message, field) {
+    const embed = message.embeds[0];
+    const value = field.value;
+
+    const newEmbed = embed;
+    findField(field, newEmbed).value = value;
+    message.edit({ embeds: [newEmbed] });
+
+    return field;
+}
+
+function replaceInField(filter, replacement, message, field) {
+    editField(field.value.replace(filter, replacement), message, field);
+    return field.value;
+}
+
+function appendToField(value, message, field, newLine = true) {
+    const value = field.value;
+
+    if (newLine)
+        editField(`${field}\n${value}`, message, field);
+    else
+        editField(`${field}${value}`, message, field);
+
+    return field.value;
+}
+
 async function setupEmojiReaction(emoji, message, fieldName) {
     const embed = message.embeds[0];
     const filter = (reaction, user) => reaction.emoji.name === emoji && !user.bot;
     const collector = message.createReactionCollector({ filter: filter, dispose: true, });
+    
     collector.on("collect", async (reaction, user) => {
-        // Get current field value for appending.
-	const currentFieldValue = embed.fields.find(field => field.name == fieldName).value;
-        // Check if the field corresponding to the emoji already contains the user.
-	if (!currentFieldValue.includes(user.displayName)) {
-            // Check if any other fields contain the user's name, if they do, remove them from that field.
-	    embed.fields.forEach(field => {
-		if (field.value.includes(user.displayName)) {
-		    field.value = field.value.replace(`\n${user.displayName}`,"");
-		}
-	    });
-            // Append to the field
-	    const newFieldValue = `${currentFieldValue}\n${user.displayName}`;
-
-	    const newEmbed = embed;
-	    newEmbed.fields.find(field => field.name == fieldName).value = newFieldValue;
-	    await message.edit({ embeds: [newEmbed] });
+        const field = findFieldByName(fieldName, embed);
+	if (!field.value.includes(user.displayName)) {
+            replaceInField(`\n${user.displayName}`, "", message, findFieldByContents(user.displayName, embed));
+            appendToField(user.displayName, message, field);
 	}
     });
-    collector.on("remove", async (reaction, user) => {
-        const field = embed.fields.find(field => field.value.includes(user.displayName));
-        const newValue = field.value.replace(`\n${user.displayName}`,"");
-        const newEmbed = embed;
-        newEmbed.fields.find(field => field.value.includes(user.displayName)).value = newValue;
 
-        await message.edit({ embeds: [newEmbed] });
+    collector.on("remove", async (reaction, user) => {
+        const field = findFieldByContents(user.displayName, embed);
+        replaceInField(`\n${user.displayName}`, "", message, field);
     });
 };
 
@@ -58,40 +85,19 @@ async function checkExecutionConditions(interaction, args) {
     return true;
 }
 
-function dateToZulu(date) {
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const months = ["January", "February", "March", "April", "May", "June", 
-                    "July", "August", "September", "October", "November", "December"];
-
-    const day = date.getUTCDate();
-    const daySuffix = (day) => {
-        if (day >= 11 && day <= 13) return "th";
-        switch (day % 10) {
-            case 1: return "st";
-            case 2: return "nd";
-            case 3: return "rd";
-            default: return "th";
-        }
-    };
-
-    const formattedDate = `${days[date.getUTCDay()]} ${months[date.getUTCMonth()]} ${day}${daySuffix(day)} ${date.getUTCFullYear()}, ` +
-                          `${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")} Zulu`;
-
-    return formattedDate;
-}
-
 function checkDateValidity(date) {
     return date != NaN && date != undefined && date;
 }
 
 async function sendOperationEmbed(name, description, time, channel) {
+    const epochTime = new Date(time).valueOf();
     channel.send(pingRole("OPERATOR"));
     const operationEmbed = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle(`Operation ${name}`)
         .addFields(
             { name: "Briefing", value: description },
-            { name: "At", value: dateToZulu(time), inline: true },
+            { name: "Time", value: `<t:${epochTime}:F\n<t:${epochTime}:R>` },
             { name: "Attendance", value: "React with a checkmark if you can attend, a question mark if you might be able to attend, or an X if you can't attend." },
             { name: "Attending", value: "" },	
             { name: "Tentative", value: "" },
