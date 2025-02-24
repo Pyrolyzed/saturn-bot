@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Pyrolyzed/saturn-bot#readme",
   "dependencies": {
+    "chrono-node": "^2.7.8",
     "discord.js": "^14.18.0"
   }
 }
