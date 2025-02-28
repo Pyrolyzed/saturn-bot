@@ -6,61 +6,70 @@ const chrono = require("chrono-node");
 
 // TODO: Move these to an embed utils file
 
+function editFieldName(newName, message, embed, field) {
+    const newEmbed = embed;
+    findField(field, newEmbed).name = newName;
+    message.edit({ embeds: [newEmbed] });
+    return field;
+}
+
 function findFieldByContents(contents, embed) {
-    return embed.find(field => field.value.includes(contents));
+    return embed.fields.find(field => field.value.includes(contents));
 }
 
 function findField(findField, embed) {
-    return embed.find(field => field == findField);
+    return embed.fields.find(field => field.value == findField.value);
 }
 
 function findFieldByName(name, embed) {
-    return embed.find(field => field.name == name);
+    return embed.fields.find(field => field.name == name);
 }
 
 function editField(value, message, field) {
     const embed = message.embeds[0];
-    const value = field.value;
 
-    const newEmbed = embed;
-    findField(field, newEmbed).value = value;
-    message.edit({ embeds: [newEmbed] });
+    findField(field, embed).value = value;
+    message.edit({ embeds: [embed] });
 
     return field;
 }
 
 function replaceInField(filter, replacement, message, field) {
     editField(field.value.replace(filter, replacement), message, field);
-    return field.value;
+    return field;
 }
 
 function appendToField(value, message, field, newLine = true) {
-    const value = field.value;
-
-    if (newLine)
-        editField(`${field}\n${value}`, message, field);
-    else
-        editField(`${field}${value}`, message, field);
-
-    return field.value;
+    if (newLine && field.value != "") {
+        editField(`${field.value}\n${value}`, message, field);
+    } else {
+        editField(`${field.value}${value}`, message, field);
+    }
+    return field;
 }
 
-async function setupEmojiReaction(emoji, message, fieldName) {
+function setupEmojiReaction(emoji, message, fieldName) {
     const embed = message.embeds[0];
     const filter = (reaction, user) => reaction.emoji.name === emoji && !user.bot;
     const collector = message.createReactionCollector({ filter: filter, dispose: true, });
     
     collector.on("collect", async (reaction, user) => {
-        const field = findFieldByName(fieldName, embed);
+        let field = findFieldByName(fieldName, embed);
 	if (!field.value.includes(user.displayName)) {
-            replaceInField(`\n${user.displayName}`, "", message, findFieldByContents(user.displayName, embed));
-            appendToField(user.displayName, message, field);
+            if (findFieldByContents(user.displayName, embed))
+                replaceInField(`\n${user.displayName}`, "", message, findFieldByContents(user.displayName, embed));
+
+            field = appendToField(user.displayName, message, field);
+            field = editFieldName(`${fieldName.replace(/\([0-9+]\)/i, "")} (${reaction.count - 1})`, message, embed, field);
+            fieldName = `${fieldName} (${reaction.count - 1})`;
 	}
     });
 
     collector.on("remove", async (reaction, user) => {
-        const field = findFieldByContents(user.displayName, embed);
-        replaceInField(`\n${user.displayName}`, "", message, field);
+        let field = findFieldByContents(user.displayName, embed);
+        field = replaceInField(`${user.displayName}`, "", message, field);
+        field = editFieldName(`${fieldName.replace(/\([0-9+]\)/i, "")} (${reaction.count - 1})`, message, embed, field);
+        fieldName = `${fieldName} (${reaction.count - 1})`;
     });
 };
 
@@ -90,14 +99,14 @@ function checkDateValidity(date) {
 }
 
 async function sendOperationEmbed(name, description, time, channel) {
-    const epochTime = new Date(time).valueOf();
+    const epochTime = String((Number(new Date(time).valueOf()) / 1000));
     channel.send(pingRole("OPERATOR"));
     const operationEmbed = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle(`Operation ${name}`)
         .addFields(
             { name: "Briefing", value: description },
-            { name: "Time", value: `<t:${epochTime}:F\n<t:${epochTime}:R>` },
+            { name: "Time", value: `<t:${epochTime}:F>\n<t:${epochTime}:R>` },
             { name: "Attendance", value: "React with a checkmark if you can attend, a question mark if you might be able to attend, or an X if you can't attend." },
             { name: "Attending", value: "" },	
             { name: "Tentative", value: "" },
