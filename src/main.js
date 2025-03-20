@@ -2,12 +2,16 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const { token } = require("../config.json");
+const { saveDataFile } = require("./utils.js");
+const dataFile = require("../data/data.json");
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildModeration,
   ],
 });
 
@@ -63,6 +67,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.once(Events.ClientReady, (client) => {
   console.log(`Ready! Logged in as ${client.user.tag}`);
+  if (dataFile["RANKS"] === undefined) {
+    dataFile["RANKS"] = {};
+  }
 });
 
 client.login(token);

@@ -1,2 +1,2 @@
-# Saturn Bot
-A bot made for the Saturn Operators server, written with Discord.js
+# Sky Bot
+A bot made for the Sky Corps server, written with Discord.js

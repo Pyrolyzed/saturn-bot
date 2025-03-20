@@ -1,21 +1,21 @@
 {
-  "name": "saturn-bot",
+  "name": "tempest-bot",
   "version": "0.1.0",
-  "description": "A bot made for the Saturn Operators Discord server.",
+  "description": "A bot made for the Sky Corps server.",
   "main": "src/main.js",
   "scripts": {
     "run": ""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pyrolyzed/saturn-bot.git"
+    "url": "git+https://github.com/Pyrolyzed/tempest-bot.git"
   },
   "author": "Pyrolyzed",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Pyrolyzed/saturn-bot/issues"
+    "url": "https://github.com/Pyrolyzed/tempest-bot/issues"
   },
-  "homepage": "https://github.com/Pyrolyzed/saturn-bot#readme",
+  "homepage": "https://github.com/Pyrolyzed/tempest-bot#readme",
   "dependencies": {
     "chrono-node": "^2.7.8",
     "discord.js": "^14.18.0"

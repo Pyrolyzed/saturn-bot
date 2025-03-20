@@ -20,11 +20,13 @@ const hasModPerms = (member) => {
 const getDate = (date) => {
   let parsedDate = new Date(date + " UTC");
 
-  if (Date.now() > parsedDate) return new Date(Date.now() + 4 * 60 * 60 * 1000);
+  if (Date.now() > parsedDate) return new Date(Date.now() + 4 * 60 * 60 * 1000); // Return 4 hours from now if the supplied date is in the past.
 
   return parsedDate;
 };
 
-exports.saveDataFile = saveDataFile;
-exports.hasModPerms = hasModPerms;
-exports.getDate = getDate;
+module.exports = {
+  saveDataFile: saveDataFile,
+  hasModPerms: hasModPerms,
+  getDate: getDate,
+};
